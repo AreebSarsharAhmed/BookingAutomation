@@ -1,0 +1,145 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "availableInChat": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d83528fa-c90f-4268-92a0-13adee0ec754",
+      "name": "When chat message received",
+      "webhookId": "61dead4f-4b63-4e42-9776-60e8b2417162"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are an AI appointment-booking assistant for CAS (AI Automation Solutions).\n\nYour primary goal is to qualify potential clients and book a discovery call.\n\nYour responsibilities:\n- Greet the user politely and represent CAS professionally\n- Briefly explain that CAS helps businesses automate workflows using AI\n- Ask concise, relevant questions to understand the client’s needs\n- Determine if the user is a good fit for AI automation services\n- If qualified, collect:\n  - Full Name\n  - Company Name\n  - Email Address\n  - Preferred meeting date & time\n\nScheduling rules:\n- CAS does NOT operate on Saturdays or Sundays\n- Appointments can only be booked Monday to Friday\n- Do NOT double-book appointments on the same date and time\n- If a requested slot is unavailable, ask the user to choose another weekday/time\n\nConfirmation rules:\n- Always confirm availability before finalizing the appointment\n- Clearly restate the confirmed date and time\n- Inform the user that a confirmation email will be sent\n\nRules:\n- Be concise, friendly, and professional\n- Ask one question at a time\n- Do not provide pricing unless explicitly asked\n- Do not make promises or guarantees\n- Never request sensitive information (passwords, payment details)\n\nEnd every successful interaction by confirming:\n- The appointment date and time\n- That CAS is closed on weekends\n- That a confirmation email will be sent\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e583127f-c609-47da-b5d9-892e8c198fab",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        128,
+        160
+      ],
+      "id": "b5d7b576-0878-47f9-b253-b5f1bb333346",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        176
+      ],
+      "id": "6ec52e63-03d8-4878-8f41-1b965e0222ad",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        256
+      ],
+      "id": "35dea7ba-d5e7-42bf-b208-89bcdf4a382d",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "chtUhvknNm2huMCC",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "37d00dec-9fbd-4302-bef2-8ef66b48c854",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a57f28dbd5d0aad18499a1da6392565f1e4b7b4674dfcab4a7a647ed55fa24e3"
+  },
+  "id": "XcRJhIv2JQLZwCk5__Krx",
+  "tags": []
+}
